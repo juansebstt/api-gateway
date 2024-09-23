@@ -6,10 +6,10 @@ spring:
           uri: http://localhost:8081
           predicates:
             - Path=/auth/**
-        - id: task-route
-          uri: http://localhost:8082
+        - id: game-route
+          uri: http://localhost:8080
           predicates:
-            - Path=/api/task/**
+            - Path=/games/**
           filters:
             - AuthenticationFilter
   endpoints:
