@@ -3,8 +3,8 @@ package com.authservice.apigateway.service;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.server.ServerHttpRequest;
-import org.springframework.http.server.ServerHttpResponse;
+import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
@@ -27,7 +27,7 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
             var request = exchange.getRequest();
 
             ServerHttpRequest serverHttpRequest = null;
-            if(validator.isSecured.test((ServerHttpRequest) request)) {
+            if(validator.isSecured.test(request)) {
                 if(authMissing((ServerHttpRequest) request)){
                     return onError(exchange, HttpStatus.UNAUTHORIZED);
                 }
@@ -48,8 +48,7 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                         .header("userIdRequest", jwtUtils.extractUserId(authHeader).toString())
                         .build();
             }
-            return chain.filter(exchange.mutate().request((org.springframework.http.server.reactive.ServerHttpRequest)
-                    serverHttpRequest).build());
+            return chain.filter(exchange.mutate().request(request).build());
         });
     }
 
