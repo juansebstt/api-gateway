@@ -21,3 +21,5 @@ spring:
       show-details: always
     gateway:
       enabled: true
+server:
+  port: 8082
